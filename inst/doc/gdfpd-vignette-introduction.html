@@ -12,7 +12,7 @@
 
 <meta name="author" content="Marcelo Perlin" />
 
-<meta name="date" content="2017-12-07" />
+<meta name="date" content="2018-02-16" />
 
 <title>Using GetDFPData to obtain annual financial reports from B3</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Using GetDFPData to obtain annual financial reports from B3</h1>
 <h4 class="author"><em>Marcelo Perlin</em></h4>
-<h4 class="date"><em>2017-12-07</em></h4>
+<h4 class="date"><em>2018-02-16</em></h4>
 
 
 
@@ -107,32 +107,34 @@ devtools<span class="op">::</span><span class="kw">install_github</span>(<span c
 <span class="kw">gdfpd.search.company</span>(<span class="st">'petrobras'</span>,<span class="dt">cache.folder =</span> <span class="kw">tempdir</span>())</code></pre></div>
 <pre><code>## 
 ## Reading info file from github
-## Found 43873 lines for 687 companies  [Actives =  521  Inactives =  167 ]
+## Found 44254 lines for 689 companies  [Actives =  517  Inactives =  173 ]
 ## Last file update:  2017-10-19
 ## Caching RDATA into tempdir()
 ## 
-## Found 1 companies:
+## Found 2 companies:
+## PETROBRAS DISTRIBUIDORA SA             | situation = ATIVO | first date = 2016-12-31 | last date - 2016-12-31
 ## PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS | situation = ATIVO | first date = 1998-12-31 | last date - 2016-12-31</code></pre>
-<pre><code>## [1] &quot;PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS&quot;</code></pre>
+<pre><code>## [1] &quot;PETROBRAS DISTRIBUIDORA SA&quot;            
+## [2] &quot;PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS&quot;</code></pre>
 <p>Its official name in Bovespa records is <code>PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS</code>. Data for quarterly and annual statements are available from 1998 to 2017. The situation of the company, active or canceled, is also given. This helps verifying the availability of data.</p>
 <p>The content of all available financial statements can be accessed with function <code>gdfpd.get.info.companies</code>. It will read and parse a .csv file from my <a href="https://github.com/msperlin/GetDFPData_auxiliary">github repository</a>. This will be periodically updated for new information. Let’s try it out:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">df.info &lt;-<span class="st"> </span><span class="kw">gdfpd.get.info.companies</span>(<span class="dt">type.data =</span> <span class="st">'companies'</span>, <span class="dt">cache.folder =</span> <span class="kw">tempdir</span>())</code></pre></div>
 <pre><code>## 
 ## Reading info file from github
-## Found 43873 lines for 687 companies  [Actives =  521  Inactives =  167 ]
+## Found 44254 lines for 689 companies  [Actives =  517  Inactives =  173 ]
 ## Last file update:  2017-10-19
 ## Caching RDATA into tempdir()</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(df.info)</code></pre></div>
-<pre><code>## Observations: 689
+<pre><code>## Observations: 691
 ## Variables: 8
 ## $ name.company    &lt;chr&gt; &quot;521 PARTICIPAÇOES S.A. - EM LIQUIDAÇÃO EXTRAJ...
 ## $ id.company      &lt;int&gt; 16330, 16284, 21725, 19313, 18350, 18970, 1810...
 ## $ situation       &lt;chr&gt; &quot;ATIVO&quot;, &quot;ATIVO&quot;, &quot;ATIVO&quot;, &quot;ATIVO&quot;, &quot;CANCELADA...
-## $ listing.segment &lt;chr&gt; NA, &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;None&quot;, &quot;Corporate...
-## $ main.sector     &lt;chr&gt; NA, &quot;Financeiro e Outros&quot;, &quot;Consumo não Cíclic...
-## $ tickers         &lt;chr&gt; NA, &quot;QVQP3B&quot;, NA, &quot;AELP3&quot;, NA, &quot;TIET11;TIET3;T...
+## $ listing.segment &lt;chr&gt; NA, &quot;Tradicional&quot;, &quot;Tradicional&quot;, &quot;Tradicional...
+## $ main.sector     &lt;chr&gt; NA, &quot;Financeiro e Outros&quot;, &quot;Saúde&quot;, &quot;Financeir...
+## $ tickers         &lt;chr&gt; NA, &quot;QVQP3B&quot;, &quot;ADHM3&quot;, &quot;AELP3&quot;, NA, &quot;TIET11;TI...
 ## $ first.date      &lt;date&gt; 1998-12-31, 2001-12-31, 2008-12-31, 2001-12-3...
-## $ last.date       &lt;date&gt; 2016-12-31, 2016-12-31, 2016-12-31, 2016-12-3...</code></pre>
+## $ last.date       &lt;date&gt; 2016-12-31, 2016-12-31, 2016-12-31, 2017-12-3...</code></pre>
 <p>This file includes several information that are gathered from Bovespa: names of companies, official numeric ids, listing segment, sectors, traded tickers and, most importantly, the available dates. The resulting dataframe can be used to filter and gather information for large scale research such as downloading financial data for a specific sector.</p>
 <div id="downloading-financial-information-for-one-company" class="section level2">
 <h2>Downloading financial information for ONE company</h2>
@@ -177,9 +179,12 @@ df.reports &lt;-<span class="st"> </span><span class="kw">gdfpd.GetDFPData</span
 <p>The resulting object is a <code>tibble</code>, a data.frame type of object that allows for list columns. Let’s have a look in its content:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(df.reports)</code></pre></div>
 <pre><code>## Observations: 1
-## Variables: 33
+## Variables: 36
 ## $ company.name                  &lt;chr&gt; &quot;PETRÓLEO BRASILEIRO  S.A.  - PE...
 ## $ company.code                  &lt;int&gt; 9512
+## $ cnpj                          &lt;lgl&gt; NA
+## $ date.company.constitution     &lt;lgl&gt; NA
+## $ date.cvm.registration         &lt;lgl&gt; NA
 ## $ company.tickers               &lt;chr&gt; &quot;PETR3;PETR4&quot;
 ## $ min.date                      &lt;date&gt; 2004-12-31
 ## $ max.date                      &lt;date&gt; 2005-12-31
@@ -207,7 +212,7 @@ df.reports &lt;-<span class="st"> </span><span class="kw">gdfpd.GetDFPData</span
 ## $ history.compensation.summary  &lt;list&gt; [NULL]
 ## $ history.transactions.related  &lt;list&gt; [NULL]
 ## $ history.debt.composition      &lt;list&gt; [NULL]
-## $ history.governance.listings   &lt;list&gt; [NULL]
+## $ history.governance.listings   &lt;list&gt; [&lt;NA, NA, NA&gt;]
 ## $ history.board.composition     &lt;list&gt; [NULL]
 ## $ history.committee.composition &lt;list&gt; [NULL]
 ## $ history.family.relations      &lt;list&gt; [NULL]</code></pre>
@@ -457,7 +462,7 @@ df.reports &lt;-<span class="st"> </span><span class="kw">gdfpd.GetDFPData</span
 ##      Acessing FCA data | No FCA file available..
 ## Processing 9512 - PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS
 ##  Finding info from Bovespa
-##      Found cache file /tmp/RtmpXZ0pDS/9512_PETRÓLEO/GetDFPData_BOV_cache_9512_PETR.rds
+##      Found cache file /tmp/RtmplkXAqk/9512_PETRÓLEO/GetDFPData_BOV_cache_9512_PETR.rds
 ##  Processing 9512 - PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS | date 2006-12-31
 ##      Acessing DFP data | downloading file | reading file | saving cache
 ##      Acessing FRE data | No FRE file available..
@@ -469,9 +474,12 @@ df.reports &lt;-<span class="st"> </span><span class="kw">gdfpd.GetDFPData</span
 <p>And now we can check the resulting <code>tibble</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">glimpse</span>(df.reports)</code></pre></div>
 <pre><code>## Observations: 2
-## Variables: 33
+## Variables: 36
 ## $ company.name                  &lt;chr&gt; &quot;BANCO DO ESTADO DO RIO GRANDE D...
 ## $ company.code                  &lt;int&gt; 1210, 9512
+## $ cnpj                          &lt;lgl&gt; NA, NA
+## $ date.company.constitution     &lt;lgl&gt; NA, NA
+## $ date.cvm.registration         &lt;lgl&gt; NA, NA
 ## $ company.tickers               &lt;chr&gt; &quot;BRSR3;BRSR5;BRSR6&quot;, &quot;PETR3;PETR4&quot;
 ## $ min.date                      &lt;date&gt; 2005-12-31, 2005-12-31
 ## $ max.date                      &lt;date&gt; 2006-12-31, 2006-12-31
@@ -499,7 +507,7 @@ df.reports &lt;-<span class="st"> </span><span class="kw">gdfpd.GetDFPData</span
 ## $ history.compensation.summary  &lt;list&gt; [NULL, NULL]
 ## $ history.transactions.related  &lt;list&gt; [NULL, NULL]
 ## $ history.debt.composition      &lt;list&gt; [NULL, NULL]
-## $ history.governance.listings   &lt;list&gt; [NULL, NULL]
+## $ history.governance.listings   &lt;list&gt; [&lt;NA, NA, NA&gt;, &lt;NA, NA, NA&gt;]
 ## $ history.board.composition     &lt;list&gt; [NULL, NULL]
 ## $ history.committee.composition &lt;list&gt; [NULL, NULL]
 ## $ history.family.relations      &lt;list&gt; [NULL, NULL]</code></pre>
@@ -525,11 +533,11 @@ df.assets.liabilities &lt;-<span class="st"> </span><span class="kw">rbind</span
 my.tab</code></pre></div>
 <pre><code>## # A tibble: 3 x 3
 ## # Groups:   name.company [?]
-##                              name.company   ref.date Liq.Index
-##                                     &lt;chr&gt;     &lt;date&gt;     &lt;dbl&gt;
-## 1 BANCO DO ESTADO DO RIO GRANDE DO SUL SA 2006-12-31 0.7251432
-## 2  PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS 2005-12-31 0.9370813
-## 3  PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS 2006-12-31 0.9733600</code></pre>
+##   name.company                            ref.date   Liq.Index
+##   &lt;chr&gt;                                   &lt;date&gt;         &lt;dbl&gt;
+## 1 BANCO DO ESTADO DO RIO GRANDE DO SUL SA 2006-12-31     0.725
+## 2 PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS  2005-12-31     0.937
+## 3 PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS  2006-12-31     0.973</code></pre>
 <p>Now we can visualize the information using <code>ggplot2</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
 
