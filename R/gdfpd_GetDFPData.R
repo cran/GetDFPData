@@ -16,6 +16,7 @@
 #' @param folder.out Folder where to download and manipulate the zip files. Default = tempdir()
 #' @param do.cache Logical for controlling to whether to use a cache system or not. Default = TRUE
 #' @param cache.folder Folder to cache (save) all processed information. Default = file.path(getwd(),'DFP Cache Folder')
+#' @param fetch.new.files Logical. Should the function search for new files/data in Bovespa? (default = TRUE)
 #' @param max.dl.tries Maximum number of attempts for dowloading files
 #'
 #' @return A tibble object with all gathered financial statements, with each company as a row
@@ -40,6 +41,7 @@ gdfpd.GetDFPData <- function(name.companies,
                              folder.out = tempdir(),
                              do.cache = TRUE,
                              cache.folder = 'DFP Cache Folder',
+                             fetch.new.files = TRUE,
                              max.dl.tries = 10) {
 
   # sanity check
@@ -70,8 +72,31 @@ gdfpd.GetDFPData <- function(name.companies,
 
   # get data from github
 
-  df.info <- gdfpd.get.info.companies(type.data = 'companies_files',
-                                      cache.folder = cache.folder)
+
+  if (!fetch.new.files ) {
+
+
+    df.info <- gdfpd.get.info.companies(type.data = 'companies_files',
+                                        cache.folder = cache.folder)
+
+  }  else {
+
+    df.info <- gdfpd.get.info.companies(type.data = 'companies')
+
+    df.ids <- unique(df.info[, c('name.company', 'id.company')])
+    ids.company <- df.ids$id.company[df.ids$name.company %in% name.companies ]
+
+    cat('\nFetching new files from Bovespa.')
+
+    l.out <- lapply(ids.company, gdfpd.get.files.from.bovespa)
+
+    df.files <- do.call(what = rbind, l.out)
+
+    df.info <- dplyr::inner_join(df.info, df.files)
+
+    df.info$id.date <- as.Date(df.info$id.date)
+  }
+
   unique.names <- unique(df.info$name.company)
 
   idx <- !(name.companies %in% unique.names)
@@ -187,7 +212,7 @@ gdfpd.GetDFPData <- function(name.companies,
 
 
     if (file.exists(f.cache)&(do.cache)) {
-      cat(paste0('\n\t\tFound cache file ', f.cache) )
+      cat(paste0('\n\t\tFound BOV cache file') )
 
       l.out.bov <- readRDS(f.cache)
     } else {
@@ -415,10 +440,12 @@ gdfpd.GetDFPData <- function(name.companies,
     }
 
     # clean up fr dataframes before saving
+
     l.out.DFP <- lapply(X = l.out.DFP, FUN = gdfpd.fix.DFP.dataframes,
                         inflation.index = inflation.index,
                         df.inflation = df.inflation,
                         max.levels = max.levels)
+
 
     # only get unique values of increase capital and other events (it repeats in the  FRE system)
 
@@ -469,6 +496,7 @@ gdfpd.GetDFPData <- function(name.companies,
                                      fr.liabilities.consolidated = list(l.out.DFP$df.liabilities.cons),
                                      fr.income.consolidated = list(l.out.DFP$df.income.cons),
                                      fr.cashflow.consolidated = list(l.out.DFP$df.cashflow.cons),
+                                     fr.auditing.report = list(l.out.DFP$df.auditing.report),
                                      history.dividends = list(l.out.bov$df.dividends),
                                      history.stockholders = list(l.out.FRE$df.stockholders),
                                      history.capital.issues = list(l.out.FRE$df.capital),
@@ -485,7 +513,10 @@ gdfpd.GetDFPData <- function(name.companies,
                                      history.governance.listings = list(l.out.FCA$df.governance.listings),
                                      history.board.composition = list(l.out.FRE$df.board.composition),
                                      history.committee.composition = list(l.out.FRE$df.committee.composition),
-                                     history.family.relations = list(l.out.FRE$df.family.relations)   )
+                                     history.family.relations = list(l.out.FRE$df.family.relations),
+                                     history.family.related.companies = list(l.out.FRE$df.family.related.companies),
+                                     history.auditing = list(l.out.FRE$df.auditing),
+                                     history.responsible.docs = list(l.out.FRE$df.responsible.docs))
 
     # bind for final df
     suppressWarnings({

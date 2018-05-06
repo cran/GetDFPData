@@ -270,27 +270,45 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
   rownames(df.committee.composition) <- NULL
 
   # get: family relations
+
   company.reg.file <- file.path(rnd.folder.name,'RelacaoConjugalNegocios.xml')
   xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
 
-  x <- xml_data[[1]]
-
-  xml.fct.family.relations <- function(x) {
-
-    df.out <- data.frame(person.name = fix.fct(x$PessoaAdministrador$NomePessoa),
-                         person.cpf = as.numeric(fix.fct(x$PessoaAdministrador$IdentificacaoPessoa)),
-                         related.person.name = fix.fct(x$PessoaRelacaoConjugal$NomePessoa),
-                         related.person.cpf = as.numeric(fix.fct(x$PessoaRelacaoConjugal$IdentificacaoPessoa)),
-                         code.relationship = fix.fct(x$RelacaoParentesco),
-                         desc.relationship = fix.fct(x$DescRelacaoParentesco),
-                         stringsAsFactors = FALSE)
-
-    return(df.out)
-
-  }
-
   df.family.relations <- do.call(what = rbind, lapply(xml_data, xml.fct.family.relations))
   rownames(df.family.relations) <- NULL
+
+  # get: family relations in related companies
+
+  company.reg.file <- file.path(rnd.folder.name,'HistoricoRelacaoSubordinacaoAdministradorEmissor.xml')
+  xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
+
+  df.family.related.companies <- do.call(what = rbind, lapply(xml_data, xml.fct.family.related.parts))
+  rownames(df.family.related.companies) <- NULL
+
+
+  # get: auditing information
+
+  company.reg.file.1 <- file.path(rnd.folder.name, 'AuditorFormularioReferencia_v2.xml')
+  company.reg.file.2 <- file.path(rnd.folder.name, 'AuditorFormularioReferencia.xml')
+  my.files <-  c(company.reg.file.1, company.reg.file.2)
+  company.reg.file <-my.files[file.exists(my.files)]
+
+  xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
+
+  df.auditing <- do.call(what = dplyr::bind_rows, lapply(xml_data, xml.fct.auditing))
+  rownames(df.auditing) <- NULL
+
+  # get: responsible for documents
+
+  company.reg.file.1 <- file.path(rnd.folder.name, 'ResponsavelConteudoFormularioNegociosNovo.xml')
+  my.files <-  company.reg.file.1
+  company.reg.file <-my.files[file.exists(my.files)]
+
+  xml_data <- XML::xmlToList(XML::xmlParse(company.reg.file, encoding = 'UTF-8'))
+
+  df.responsible.docs <- do.call(what = dplyr::bind_rows, lapply(xml_data, xml.fct.responsible ))
+  rownames(df.responsible.docs) <- NULL
+
   # save output
 
   my.l <- list(df.stockholders = df.stockholders,
@@ -307,7 +325,10 @@ gdfpd.read.zip.file.type.fre <- function(rnd.folder.name, folder.to.unzip = temp
                df.debt.composition = df.debt.composition,
                df.board.composition = df.board.composition,
                df.committee.composition = df.committee.composition,
-               df.family.relations = df.family.relations)
+               df.family.relations = df.family.relations,
+               df.family.related.companies = df.family.related.companies,
+               df.auditing = df.auditing,
+               df.responsible.docs = df.responsible.docs)
 
   return(my.l)
 }

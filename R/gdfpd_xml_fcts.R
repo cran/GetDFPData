@@ -1,3 +1,36 @@
+#' Fix NULL values in dataframe
+#'
+#' @param x Am object, possibly NULL
+#' @param type.info Type of object
+#' @return A single object
+#' @export
+#'
+#' @examples
+#'
+#' x <- NULL
+#' x2 <- fix.fct(x)
+fix.fct <- function(x, type.info = 'character') {
+  if (is.null(x)) return(NA)
+
+  if (!(type.info %in% c('character', 'date', 'numeric'))) {
+    stop('type.info should be ', paste0(c('character', 'date', 'numeric'), collapse = ' or '))
+  }
+
+  if (type.info == 'date') {
+    x <- as.Date(x)
+    if ( x == '1-01-01') {
+      x <- as.Date(NA)
+    }
+  }
+
+  if (type.info == 'numeric') {
+
+    x <- as.numeric(x)
+  }
+
+  return(x)
+}
+
 #' Reads XML data for compensation
 #'
 #' @param x A list with compensation data
@@ -140,21 +173,7 @@ xml.fct.stock.values <- function(x) {
 }
 
 
-#' Fix NULL values in dataframe
-#'
-#' @param x Am object, possibly NULL
-#'
-#' @return A single object
-#' @export
-#'
-#' @examples
-#'
-#' x <- NULL
-#' x2 <- fix.fct(x)
-fix.fct <- function(x) {
-  if (is.null(x)) x <- NA
-  return(x)
-}
+
 
 #' Reads XML data for stockholder data
 #'
@@ -346,8 +365,10 @@ xml.fct.capital.reduction <- function(x) {
 xml.fct.committee.composition <- function(x) {
 
   df.out <- data.frame(person.name = fix.fct(x$PessoaMembro$NomePessoa),
+                       person.cpf = fix.fct(x$PessoaMembro$IdentificacaoPessoa, 'numeric'),
                        person.profession = fix.fct(x$DescricaoProfissao),
-                       person.dob = as.Date(fix.fct(x$DataNascimento)),
+                       person.cv = fix.fct(x$ExperienciaProfissional),
+                       person.dob = fix.fct(x$DataNascimento, 'date'),
                        code.type.committee = fix.fct(x$CodTipoComite),
                        desc.type.committee = switch(fix.fct(x$CodTipoComite),
                                                 '1' = 'Auditing Committee',
@@ -364,6 +385,7 @@ xml.fct.committee.composition <- function(x) {
                        mandate.duration = fix.fct(x$PrazoMandato),
                        qtd.consecutive.mandates = as.numeric(fix.fct(x$QteMandatosConsecutivos)),
                        percentage.participation = as.numeric(fix.fct(x$PercParticipacaoReunioes)),
+                       other.committes = fix.fct(x$DescricaoOutroComite),
                        stringsAsFactors = FALSE)
 
   return(df.out)
@@ -383,9 +405,10 @@ xml.fct.committee.composition <- function(x) {
 xml.fct.board.composition <- function(x) {
 
   df.out <- data.frame(person.name = fix.fct(x$PessoaMembro$NomePessoa),
-                       person.cpf = fix.fct(x$PessoaMembro$IdentificacaoPessoa),
+                       person.cpf = fix.fct(x$PessoaMembro$IdentificacaoPessoa, 'numeric'),
                        person.profession = fix.fct(x$DescricaoProfissao),
-                       person.dob = as.Date(fix.fct(x$DataNascimento)),
+                       person.cv = fix.fct(x$DescricaoCv),
+                       person.dob = fix.fct(x$DataNascimento, 'date'),
                        code.type.board = fix.fct(x$CodTipoOrgaoAdministracao),
                        desc.type.board = switch(fix.fct(x$CodTipoOrgaoAdministracao),
                                                 '1' = 'Director',
@@ -406,6 +429,107 @@ xml.fct.board.composition <- function(x) {
                        qtd.consecutive.mandates = as.numeric(fix.fct(x$QteMandatosConsecutivos)),
                        percentage.participation = as.numeric(fix.fct(x$PercParticipacaoReunioes)),
                        stringsAsFactors = FALSE)
+
+  return(df.out)
+
+}
+
+#' Reads XML data for family relations
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.family.relations <- function(x) {
+
+  df.out <- data.frame(person.name = fix.fct(x$PessoaAdministrador$NomePessoa),
+                       person.cpf = as.numeric(fix.fct(x$PessoaAdministrador$IdentificacaoPessoa)),
+                       person.job = fix.fct(x$FuncaoAdministrador),
+                       related.person.name = fix.fct(x$PessoaRelacaoConjugal$NomePessoa),
+                       related.person.cpf = as.numeric(fix.fct(x$PessoaRelacaoConjugal$IdentificacaoPessoa)),
+                       related.person.job = fix.fct(x$FuncaoRelacaoConjugal),
+                       code.relationship = fix.fct(x$RelacaoParentesco),
+                       desc.relationship = fix.fct(x$DescRelacaoParentesco),
+                       stringsAsFactors = FALSE)
+
+  return(df.out)
+
+}
+
+#' Reads XML data for family related parts
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.family.related.parts <- function(x) {
+
+  df.out <- data.frame(person.name = fix.fct(x$AdministradorCadastroPessoa$NomePessoa),
+                       person.cpf = fix.fct(x$AdministradorCadastroPessoa$IdentificacaoPessoa, 'numeric'),
+                       person.job = fix.fct(x$DescricaoCargoFuncaoAdministrador),
+                       type.related.person = fix.fct(x$DescricaoSubordinacao),
+                       type.relationship = fix.fct(x$DescricaoTipoRelacao),
+                       observations = fix.fct(x$DescricaoObservacao),
+                       related.company.name = fix.fct(x$PessoaSubordinadaAdministradorCadastroPessoa$NomePessoa),
+                       related.company.cnpj = fix.fct(x$PessoaSubordinadaAdministradorCadastroPessoa$IdentificacaoPessoa, 'numeric'),
+                       related.company.job = fix.fct(x$DescricaoCargoFuncaoPessoaSubordinada),
+                       stringsAsFactors = FALSE)
+
+  return(df.out)
+
+}
+
+#' Reads XML data for auditing
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.auditing <- function(x) {
+
+  df.out <- data.frame(auditor.name = fix.fct(x$PessoaAuditor$NomePessoa),
+                       auditor.cnpj = fix.fct(x$PessoaAuditor$IdentificacaoPessoa),
+                       contract.first.date = fix.fct(x$DataInicioContratacaoAuditorServico, 'date'),
+                       contract.last.date = fix.fct(x$DataFimContratacaoAuditorServico, 'date'),
+                       description.contract = fix.fct(x$DescricaoServicoContratado),
+                       compensation = fix.fct(x$HonorariosServicosPresta),
+                       justification.substitution = fix.fct(x$JustificativaSubstituicao),
+                       reason.discordance = fix.fct(x$RazaoApresentadaAuditorDiscordancia),
+                       stringsAsFactors = FALSE)
+
+  return(df.out)
+
+}
+
+#' Reads XML data for responsibles documents
+#'
+#' @param x A list with data
+#'
+#' @return A dataframe
+#' @export
+#'
+#' @examples
+#'
+#' # No example (INTERNAL)
+xml.fct.responsible <- function(x) {
+
+
+  df.out <- data.frame(person.cod = fix.fct(x$CodResponsavel),
+                       person.name = fix.fct(x$NomeResponsavel),
+                       person.job = fix.fct(x$DescricaoCargo),
+                       stringsAsFactors = FALSE )
 
   return(df.out)
 

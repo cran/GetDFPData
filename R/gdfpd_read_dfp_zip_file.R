@@ -14,8 +14,8 @@
 #' my.l <- gdfpd.read.dfp.zip.file(my.f, id.type = 'before 2011')
 #' print(my.l)
 gdfpd.read.dfp.zip.file <- function(my.zip.file,
-                                folder.to.unzip = tempdir(),
-                                id.type) {
+                                    folder.to.unzip = tempdir(),
+                                    id.type) {
 
   # sanity check
   if (tools::file_ext(my.zip.file) != 'zip') {
@@ -188,6 +188,28 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
                              df.income = df.income,
                              df.cashflow = df.cashflow)
 
+  # auditing report
+
+  fin.report.file <- file.path(rnd.folder.name, 'AnexoTexto.xml')
+
+  if (!file.exists(fin.report.file)) {
+    stop('Cant find file', fin.report.file)
+  }
+
+  xml_data <- NA
+  try({
+    xml_data <- XML::xmlToList(XML::xmlParse(fin.report.file, encoding = 'UTF-8'))
+
+  })
+
+  if (is.na(xml_data)) {
+    warning('Cant read auditing notes..')
+
+    df.auditing.report = data.frame(text = NA, stringsAsFactors = FALSE)
+  } else {
+    df.auditing.report = data.frame(text = xml_data$AnexoTexto$Texto, stringsAsFactors = FALSE)
+  }
+
   my.l <- list(df.assets = df.assets,
                df.liabilities = df.liabilities,
                df.income = df.income,
@@ -195,7 +217,8 @@ gdfpd.read.dfp.zip.file.type.1 <- function(rnd.folder.name, folder.to.unzip = te
                df.assets.cons = df.assets.cons,
                df.liabilities.cons = df.liabilities.cons,
                df.income.cons = df.income.cons,
-               df.cashflow.cons = df.cashflow.cons)
+               df.cashflow.cons = df.cashflow.cons,
+               df.auditing.report = df.auditing.report)
 
 
   return(my.l)
@@ -256,16 +279,21 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
 
   if (length(my.f) == 0) {
     df.cashflow.cons <- data.frame(acc.desc  = NA,
-                              acc.value = NA,
-                              acc.number = NA)
+                                   acc.value = NA,
+                                   acc.number = NA)
   } else {
     df.cashflow.cons <- gdfpd.read.fwf.file(my.f[1])
   }
 
   l.consolidated.dfs<- list(df.assets = df.assets,
-                           df.liabilities = df.liabilities,
-                           df.income = df.income,
-                           df.cashflow = df.cashflow)
+                            df.liabilities = df.liabilities,
+                            df.income = df.income,
+                            df.cashflow = df.cashflow)
+
+  # auditing report
+
+  df.auditing.report = data.frame(text = NA)
+
   # get basic info
 
   my.l <- list(df.assets = df.assets,
@@ -275,7 +303,8 @@ gdfpd.read.dfp.zip.file.type.2 <- function(rnd.folder.name, folder.to.unzip = te
                df.assets.cons = df.assets.cons,
                df.liabilities.cons = df.liabilities.cons,
                df.income.cons = df.income.cons,
-               df.cashflow.cons = df.cashflow.cons)
+               df.cashflow.cons = df.cashflow.cons,
+               df.auditing.report = df.auditing.report)
 
 
   return(my.l)
