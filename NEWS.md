@@ -1,3 +1,12 @@
+### Version 1.0 (2018-08-28)
+
+- Fixed bug in values of reports due to previous update. 
+- Fixed bug in text of auditing reports
+- Added tables 3.5 (payout e dividendos)
+- Added table 15.3 (distribuição capital)
+- Added table 18.1 (detalhes ações)
+- Added choice for different data systems (DFP/FRE/FCA)
+
 ### Version 0.9 (2018-07-26)
 
 - Fixed thousands bug. Some small companies had nominal values, while the majority had it multiplied by thousands. The new code will divide by 1000 for the small companies. Any reported value in the DFP is always multiplied by thousands.
