@@ -1,6 +1,6 @@
-e6c165db601169dbc9413406a9612515 *DESCRIPTION
+3d95cfacbbfd31297b11037a4b30ce33 *DESCRIPTION
 5f1fd53085707f5ca021ff8ca512a252 *NAMESPACE
-f1042a0f21df9a4a1a79fff97996fae0 *NEWS.md
+f23f2a00a14942ed84f104b6b884cbcf *NEWS.md
 12f673e014e6fe4aaadb1076fe9ee310 *R/gdfpd_GetDFPData.R
 53db2beb7f3027eba6c9547e014177a8 *R/gdfpd_export_DFP_Data.R
 067aa5e5106d2c47f371f7a995a81fc0 *R/gdfpd_fct_get_files_from_bovespa.R
@@ -11,13 +11,13 @@ ec15924b53b894c1e96af3b1a4ec0f89 *R/gdfpd_get_info_companies.R
 1771a1cd8ba65156bdc2c91a5d5bd332 *R/gdfpd_read_dfp_zip_file.R
 89d820d04f742b65b8b7d6ca6a63214c *R/gdfpd_read_fca_zip_file.R
 8985f90fa2cf668482511ee7002c7182 *R/gdfpd_read_fre_zip_file.R
-7e3dada57ebb7234d5bcd62a054e9072 *R/gdfpd_utils.R
+ecf09a1dd20c794e41ac9621b4aa7d55 *R/gdfpd_utils.R
 11e499ba70e565468a5fcfb148fb7832 *R/gdfpd_xml_fcts.R
 b2da254e1a2bf1f74487d9708f198547 *README.md
 f24bbb98a9c704abb5b36c763ed9efdd *build/vignette.rds
 3d7e8e3754fc274a881835553ee40bf6 *inst/doc/gdfpd-vignette-introduction.R
 64180ecba2d729bc9123b65683a92dcd *inst/doc/gdfpd-vignette-introduction.Rmd
-0df025c9ad5a57fc0b4b2b9c46be820b *inst/doc/gdfpd-vignette-introduction.html
+81dbf8cc0d2ef044c5c3ba0ab793a2e6 *inst/doc/gdfpd-vignette-introduction.html
 9ab47ddd614cf61fa60e4da55dcaa350 *inst/extdata/9512_PETR_2002-12-31.zip
 3f0b04ad8613133fd3774bea8e169fac *inst/extdata/DFPBPAE.001
 f4efaaa2a3bbf77ca652c72a8038e726 *inst/extdata/Example_DFP_Report_Petrobras.RData
