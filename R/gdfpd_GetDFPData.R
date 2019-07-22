@@ -247,6 +247,10 @@ gdfpd.GetDFPData <- function(name.companies,
     # fix l.out.bov
     l.out.bov <- lapply(l.out.bov, my.fix.cols, name.company = i.company, ref.date = 'Current')
 
+    # fix file names for latin characters
+    my.filename <- iconv(company.df$name.company, to = 'ASCII//TRANSLIT')[1]
+    my.filename <- stringr::str_replace_all(my.filename, stringr::fixed('?'), '_')
+
     l.out.DFP <- list()
     l.out.FRE <- list()
     l.out.FCA <- list()
@@ -274,9 +278,7 @@ gdfpd.GetDFPData <- function(name.companies,
         # get dfp data
         dl.link <- temp.df.dfp$dl.link
 
-        # fix file names for latin characters
-        my.filename <- iconv(temp.df.dfp$name.company, to = 'ASCII//TRANSLIT')
-        my.filename <- stringr::str_replace_all(my.filename, stringr::fixed('?'), '_')
+
 
         temp.file = file.path(folder.out, paste0('DFP_',
                                                  stringr::str_sub(my.filename,1,4), '_',
@@ -289,6 +291,7 @@ gdfpd.GetDFPData <- function(name.companies,
         if (nrow(temp.df.dfp) == 0) {
           cat(' | No DFP file available..')
           l.out.DFP.temp <- list()
+          version.dfp.file <- NA
         } else {
 
           # do cache
@@ -333,6 +336,7 @@ gdfpd.GetDFPData <- function(name.companies,
         }
       } else {
         l.out.DFP.temp <- list()
+        version.dfp.file <- NA
       }
 
       # get data from FRE
@@ -346,6 +350,7 @@ gdfpd.GetDFPData <- function(name.companies,
         if (nrow(temp.df.fre) == 0) {
           cat(' | No FRE file available..')
           l.out.FRE.temp <- list()
+          version.fre.file <- NA
         } else {
 
           temp.file = file.path(folder.out, paste0('FRE_',
@@ -411,11 +416,16 @@ gdfpd.GetDFPData <- function(name.companies,
 
         cat(paste0('\n\t\tAcessing FCA data') )
 
-        idx <- (df.to.process$name.company == i.company)&
-          (df.to.process$type.fin.report == 'fca')&
-          (format(df.to.process$id.date, '%Y') == format(temp.df.dfp$id.date, '%Y'))
+        idx <- (company.df$id.date == i.date)&(company.df$type.fin.report == 'fca')
 
-        temp.df.fca <- df.to.process[idx,  ]
+
+        # idx <- (df.to.process$name.company == i.company)&
+        #   (df.to.process$type.fin.report == 'fca')&
+        #   (format(df.to.process$id.date, '%Y') == format(temp.df.dfp$id.date, '%Y'))
+
+        idx <- (company.df$id.date == i.date)&(company.df$type.fin.report == 'fca')
+
+        temp.df.fca <- company.df[idx,  ]
 
         if (nrow(temp.df.fca ) == 0) {
           cat(' | No FCA file available..')
@@ -442,6 +452,7 @@ gdfpd.GetDFPData <- function(name.companies,
                                       'idfile_', temp.df.fca$id.file, '_',
                                       'verfile_', temp.df.fca$version.file,
                                       '.rds'))
+
 
           if (file.exists(f.cache)) {
             cat(paste0(' | Found FCA cache file') )
@@ -571,7 +582,8 @@ gdfpd.GetDFPData <- function(name.companies,
                                      history.auditing = list(l.out.FRE$df.auditing),
                                      history.responsible.docs = list(l.out.FRE$df.responsible.docs),
                                      history.stocks.details = list(l.out.FRE$df.stocks.details),
-                                     history.dividends.details = list(l.out.FRE$df.dividends.details) )
+                                     history.dividends.details = list(l.out.FRE$df.dividends.details),
+                                     history.intangible = list(l.out.FRE$df.intangible.details))
 
     # bind for final df
     suppressWarnings({

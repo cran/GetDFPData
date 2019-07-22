@@ -1,3 +1,8 @@
+## Version 1.5.2 (2019-07-22)
+
+- Added intangibles table from FRE (table 9.1.b)
+- fixed minor CHECK bug in fix.fct
+
 ## Version 1.5.1 (2019-02-14)
 
 - Fixed bug for repeated dates (see [github issue](https://github.com/msperlin/GetDFPData/issues/19) )
