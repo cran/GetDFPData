@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Marcelo Perlin" />
 
-<meta name="date" content="2019-07-22" />
+<meta name="date" content="2020-05-18" />
 
 <title>Using GetDFPData to obtain annual financial reports from B3</title>
 
@@ -38,7 +37,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -118,9 +117,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -289,7 +285,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -304,7 +301,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Using GetDFPData to obtain annual financial reports from B3</h1>
 <h4 class="author">Marcelo Perlin</h4>
-<h4 class="date">2019-07-22</h4>
+<h4 class="date">2020-05-18</h4>
 
 
 
@@ -323,11 +320,11 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="installation" class="section level1">
 <h1>Installation</h1>
 <p>The package is (not yet) available in CRAN (release version) and in Github (development version). You can install any of those with the following code:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co"># Release version in CRAN</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">install.packages</span>(<span class="st">'GetDFPData'</span>) </a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="co"># Development version in Github</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">'msperlin/GetDFPData'</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="co"># Release version in CRAN</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">install.packages</span>(<span class="st">&#39;GetDFPData&#39;</span>) </a>
+<a class="sourceLine" id="cb1-3" title="3"></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="co"># Development version in Github</span></a>
+<a class="sourceLine" id="cb1-5" title="5">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&#39;msperlin/GetDFPData&#39;</span>)</a></code></pre></div>
 </div>
 <div id="shinny-interface" class="section level1">
 <h1>Shinny interface</h1>
@@ -336,47 +333,47 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="how-to-use-getdfpdata" class="section level1">
 <h1>How to use <code>GetDFPData</code></h1>
 <p>The starting point of <code>GetDFPData</code> is to find the official names of companies in B3. Function <code>gdfpd.search.company</code> serves this purpose. Given a string (text), it will search for a partial matches in companies names. As an example, let’s find the <em>official</em> name of Petrobras, one of the largest companies in Brazil:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(GetDFPData)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">library</span>(tibble)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="kw">gdfpd.search.company</span>(<span class="st">'petrobras'</span>, <span class="dt">cache.folder =</span> <span class="kw">tempdir</span>())</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">library</span>(GetDFPData)</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw">library</span>(tibble)</a>
+<a class="sourceLine" id="cb2-3" title="3"></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="kw">gdfpd.search.company</span>(<span class="st">&#39;petrobras&#39;</span>, <span class="dt">cache.folder =</span> <span class="kw">tempdir</span>())</a></code></pre></div>
 <p>Its official name in Bovespa records is <code>PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS</code>. Data for quarterly and annual statements are available from 1998 to 2017. The situation of the company, active or canceled, is also given. This helps verifying the availability of data.</p>
 <p>The content of all available financial statements can be accessed with function <code>gdfpd.get.info.companies</code>. It will read and parse a .csv file from my <a href="https://github.com/msperlin/GetDFPData_auxiliary">github repository</a>. This will be periodically updated for new information. Let’s try it out:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">df.info &lt;-<span class="st"> </span><span class="kw">gdfpd.get.info.companies</span>(<span class="dt">type.data =</span> <span class="st">'companies'</span>, <span class="dt">cache.folder =</span> <span class="kw">tempdir</span>())</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">glimpse</span>(df.info)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">df.info &lt;-<span class="st"> </span><span class="kw">gdfpd.get.info.companies</span>(<span class="dt">type.data =</span> <span class="st">&#39;companies&#39;</span>, <span class="dt">cache.folder =</span> <span class="kw">tempdir</span>())</a>
+<a class="sourceLine" id="cb3-2" title="2"></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="kw">glimpse</span>(df.info)</a></code></pre></div>
 <p>This file includes several information that are gathered from Bovespa: names of companies, official numeric ids, listing segment, sectors, traded tickers and, most importantly, the available dates. The resulting dataframe can be used to filter and gather information for large scale research such as downloading financial data for a specific sector.</p>
 <div id="downloading-financial-information-for-one-company" class="section level2">
 <h2>Downloading financial information for ONE company</h2>
 <p>All you need to download financial data with <code>GetDFPData</code> are the official names of companies, which can be found with <code>gdfpd.search.company</code>, the desired starting and ending dates and the type of financial information (individual or consolidated). Let’s try it for PETROBRAS:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">name.companies &lt;-<span class="st"> 'PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS'</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">first.date &lt;-<span class="st"> '2004-01-01'</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">last.date  &lt;-<span class="st"> '2006-01-01'</span></a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">df.reports &lt;-<span class="st"> </span><span class="kw">gdfpd.GetDFPData</span>(<span class="dt">name.companies =</span> name.companies, </a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">                               <span class="dt">first.date =</span> first.date,</a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">                               <span class="dt">last.date =</span> last.date,</a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">                               <span class="dt">cache.folder =</span> <span class="kw">tempdir</span>())</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">name.companies &lt;-<span class="st"> &#39;PETRÓLEO BRASILEIRO  S.A.  - PETROBRAS&#39;</span></a>
+<a class="sourceLine" id="cb4-2" title="2">first.date &lt;-<span class="st"> &#39;2004-01-01&#39;</span></a>
+<a class="sourceLine" id="cb4-3" title="3">last.date  &lt;-<span class="st"> &#39;2006-01-01&#39;</span></a>
+<a class="sourceLine" id="cb4-4" title="4"></a>
+<a class="sourceLine" id="cb4-5" title="5">df.reports &lt;-<span class="st"> </span><span class="kw">gdfpd.GetDFPData</span>(<span class="dt">name.companies =</span> name.companies, </a>
+<a class="sourceLine" id="cb4-6" title="6">                               <span class="dt">first.date =</span> first.date,</a>
+<a class="sourceLine" id="cb4-7" title="7">                               <span class="dt">last.date =</span> last.date,</a>
+<a class="sourceLine" id="cb4-8" title="8">                               <span class="dt">cache.folder =</span> <span class="kw">tempdir</span>())</a></code></pre></div>
 <p>The resulting object is a <code>tibble</code>, a data.frame type of object that allows for list columns. Let’s have a look in its content:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">glimpse</span>(df.reports)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">glimpse</span>(df.reports)</a></code></pre></div>
 <p>Object <code>df.reports</code> only has one row since we only asked for data of one company. The number of rows increases with the number of companies, as we will soon learn with the next example. All financial statements for the different years are available within <code>df.reports</code>. For example, the assets statements for all desired years of PETROBRAS are:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">df.income.long &lt;-<span class="st"> </span>df.reports<span class="op">$</span>fr.income[[<span class="dv">1</span>]]</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="kw">glimpse</span>(df.income.long)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">df.income.long &lt;-<span class="st"> </span>df.reports<span class="op">$</span>fr.income[[<span class="dv">1</span>]]</a>
+<a class="sourceLine" id="cb6-2" title="2"></a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="kw">glimpse</span>(df.income.long)</a></code></pre></div>
 <p>The resulting dataframe is in the long format, ready for processing. In the long format, financial statements of different years are stacked. In the wide format, we have the year as columns of the table.</p>
 <p>If you want the wide format, which is the most common way that financial reports are presented, you can use function <code>gdfpd.convert.to.wide</code>. See an example next:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">df.income.wide &lt;-<span class="st"> </span><span class="kw">gdfpd.convert.to.wide</span>(df.income.long)</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">knitr<span class="op">::</span><span class="kw">kable</span>(df.income.wide )</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">df.income.wide &lt;-<span class="st"> </span><span class="kw">gdfpd.convert.to.wide</span>(df.income.long)</a>
+<a class="sourceLine" id="cb7-2" title="2"></a>
+<a class="sourceLine" id="cb7-3" title="3">knitr<span class="op">::</span><span class="kw">kable</span>(df.income.wide )</a></code></pre></div>
 </div>
 <div id="exporting-financial-data" class="section level2">
 <h2>Exporting financial data</h2>
 <p>The package includes function <code>gdfpd.export.DFP.data</code> for exporting the financial data to an Excel or zipped csv files. See next:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">my.basename &lt;-<span class="st"> 'MyExcelData'</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">my.format &lt;-<span class="st"> 'csv'</span> <span class="co"># only supported so far</span></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="kw">gdfpd.export.DFP.data</span>(<span class="dt">df.reports =</span> df.reports, </a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">                      <span class="dt">base.file.name =</span> my.basename,</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">                      <span class="dt">type.export =</span> my.format)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">my.basename &lt;-<span class="st"> &#39;MyExcelData&#39;</span></a>
+<a class="sourceLine" id="cb8-2" title="2">my.format &lt;-<span class="st"> &#39;csv&#39;</span> <span class="co"># only supported so far</span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="kw">gdfpd.export.DFP.data</span>(<span class="dt">df.reports =</span> df.reports, </a>
+<a class="sourceLine" id="cb8-4" title="4">                      <span class="dt">base.file.name =</span> my.basename,</a>
+<a class="sourceLine" id="cb8-5" title="5">                      <span class="dt">type.export =</span> my.format)</a></code></pre></div>
 <p>The resulting Excel file contains all data available in <code>df.reports</code>.</p>
 </div>
 </div>

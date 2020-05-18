@@ -1,8 +1,8 @@
 Package: GetDFPData
 Title: Reading Annual Financial Reports from Bovespa's DFP, FRE and FCA
         System
-Version: 1.5.2
-Date: 2019-07-16
+Version: 1.5.3
+Date: 2020-05-16
 Authors@R: person("Marcelo", "Perlin", email = "marceloperlin@gmail.com", role = c("aut", "cre"))
 Description: Reads annual financial reports including assets, liabilities, dividends history, stockholder composition and much more from Bovespa's DFP, FRE and FCA systems <http://www.bmfbovespa.com.br/en_us/products/listed-equities-and-derivatives/equities/listed-companies.htm>.
  These are web based interfaces for all financial reports of companies traded at Bovespa. The package is specially designed for large scale data importation, keeping a tabular (long) structure for easier processing.  
@@ -14,12 +14,12 @@ License: GPL-2
 BugReports: https://github.com/msperlin/GetDFPData/issues
 URL: https://github.com/msperlin/GetDFPData/
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Suggests: knitr, rmarkdown, testthat, ggplot2
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2019-07-22 16:35:48 UTC; msperlin
+Packaged: 2020-05-18 15:54:13 UTC; msperlin
 Author: Marcelo Perlin [aut, cre]
 Maintainer: Marcelo Perlin <marceloperlin@gmail.com>
 Repository: CRAN
-Date/Publication: 2019-07-22 21:10:10 UTC
+Date/Publication: 2020-05-18 16:10:02 UTC
