@@ -1,6 +1,6 @@
-07525b618c9f88e3e59ab0f52dc6a7bf *DESCRIPTION
+cf88eed8efa0aa2b65b515412e2ed455 *DESCRIPTION
 ea01c286b7a7f1e4bc6d98bf0ee4165e *NAMESPACE
-b5850fb620a444c51418177d2e3c89ab *NEWS.md
+ebec9acc291ea99e5b45b05e65ce4085 *NEWS.md
 35f48fc92d6a76e4be3e6d8b3bf9cc34 *R/gdfpd_GetDFPData.R
 53db2beb7f3027eba6c9547e014177a8 *R/gdfpd_export_DFP_Data.R
 067aa5e5106d2c47f371f7a995a81fc0 *R/gdfpd_fct_get_files_from_bovespa.R
@@ -11,13 +11,13 @@ b9e455946712459cc8907ca67eb32ace *R/gdfpd_get_info_companies.R
 3e30113631478fbbcd4619384f8e5fb7 *R/gdfpd_read_dfp_zip_file.R
 89d820d04f742b65b8b7d6ca6a63214c *R/gdfpd_read_fca_zip_file.R
 7a16a3ca27668d34bb2e7e4fd59e7b3f *R/gdfpd_read_fre_zip_file.R
-3076f10e2a36f461b95c865139c6cf4a *R/gdfpd_utils.R
+92b126620ef1c4d0e90aa6eb6af45a6b *R/gdfpd_utils.R
 c5637f542a4ce9000a3550c4694b4076 *R/gdfpd_xml_fcts.R
-b2da254e1a2bf1f74487d9708f198547 *README.md
-e45a19d2406da62f6d229c7f8ca255f2 *build/vignette.rds
+404b9c8611f99c8e5e7be972a41ee4a4 *README.md
+26e28ad0ef21b441db82b20c263ee514 *build/vignette.rds
 0a15a28806c668a8c51318e5f8a51748 *inst/doc/gdfpd-vignette-introduction.R
-64180ecba2d729bc9123b65683a92dcd *inst/doc/gdfpd-vignette-introduction.Rmd
-ee81c82e08778e45ebf18e7263680210 *inst/doc/gdfpd-vignette-introduction.html
+f3755526c16c539550a7467ee8cbcc6b *inst/doc/gdfpd-vignette-introduction.Rmd
+c8de69b027b8c0154dee5b14e9ebb1fa *inst/doc/gdfpd-vignette-introduction.html
 9ab47ddd614cf61fa60e4da55dcaa350 *inst/extdata/9512_PETR_2002-12-31.zip
 3f0b04ad8613133fd3774bea8e169fac *inst/extdata/DFPBPAE.001
 f4efaaa2a3bbf77ca652c72a8038e726 *inst/extdata/Example_DFP_Report_Petrobras.RData
@@ -66,4 +66,4 @@ d5db57131244f2b99cfcf42e8339e3e0 *man/xml.fct.stock.values.Rd
 838c605226e823295fdd321ce45eba98 *man/xml.fct.transactions.related.Rd
 3e14f072c70f9269ed6b06d34fb4a90b *tests/testthat.R
 3238ab0801767359787fa33baaff725b *tests/testthat/test_gdfpd.R
-64180ecba2d729bc9123b65683a92dcd *vignettes/gdfpd-vignette-introduction.Rmd
+f3755526c16c539550a7467ee8cbcc6b *vignettes/gdfpd-vignette-introduction.Rmd
